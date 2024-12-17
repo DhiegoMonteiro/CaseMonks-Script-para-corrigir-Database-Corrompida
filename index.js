@@ -1,20 +1,24 @@
 //Importa o Módulo File System do NodeJS utilizado para leitura e Exportação de Arquivos
 const fs = require('fs');
 try {
-    transformarArquivo();
+    //Chamada da Função de retorno dos Arquivos
+    let arquivosCorrompidos = retornarArquivos();
+    //Chamada da Função de Conserto dos Arquivos
+    let arquivosCorrigidos = consertarArquivos(arquivosCorrompidos[0], arquivosCorrompidos[1]);
+    //Chamada da Função de Exportação dos Arquivos
+    exportarArquivosCorrigidos(arquivosCorrigidos);
 } catch (error) {
-    console.log("Não foi possível transformar os arquivos");
+    console.log("Não foi possível transformar os arquivos.");
 }
 //Função para retorno  do arquivo consertado
-function transformarArquivo(){
+function retornarArquivos(){
     try {
     if(fs.existsSync('broken_database_1.json') && fs.existsSync('broken_database_2.json')){
         // Método JSON.parse para retorno  do arquivo Broken Database 1 e Broken Database2 em um Array de Objetos
         let arquivoCorrompido1 = JSON.parse(fs.readFileSync("broken_database_1.json"));
         let arquivoCorrompido2 = JSON.parse(fs.readFileSync("broken_database_2.json"));
-        //Chamada da Função de Conserto dos Arquivos
-        let arquivosCorrigidos = consertarArquivos(arquivoCorrompido1, arquivoCorrompido2);
-        exportarArquivosCorrigidos(arquivosCorrigidos);
+        let arrayArquivosCorrompidos = [arquivoCorrompido1, arquivoCorrompido2]
+        return arrayArquivosCorrompidos;
     } else {
         throw error;
     }
@@ -79,7 +83,7 @@ function exportarArquivosCorrigidos(arquivos) {
         }
         fs.writeFileSync('fixed_database_1.json', exportarArquivo1);
         fs.writeFileSync('fixed_database_2.json', exportarArquivo2);
-        console.log("Arquivos corrigios exportados com Sucesso!!")
+        console.log("Arquivos corrigidos exportados com Sucesso!!")
     } catch (error) {
         console.log("Arquivos Corrigidos já existem!!");
     }      
